@@ -43,7 +43,7 @@ This will start a local development server and open the app in your default web 
 
 ## Usage
 
-1. Open the Streamlit app in your web browser (by default, it will open at http://localhost:8501).
+1. Open the Streamlit app in your web browser (by default, it will open at <http://localhost:8501>).
 2. Enter the movie name and the year of release in the input fields.
 3. Click the "Get Details" button.
 
