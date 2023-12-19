@@ -13,7 +13,7 @@ def main():
     st.header("Upload a File")
     uploaded_file = st.file_uploader("Choose a file", type=ALLOWED_EXTENSIONS)
 
-    if st.button("Get Details"):
+    if st.button("Get Details", type="primary"):
         if uploaded_file is not None:
             # Process the uploaded file
             file_content = uploaded_file.read().decode('utf-8').split('\n')
