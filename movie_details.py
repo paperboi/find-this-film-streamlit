@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_carousel import carousel
 import requests
 
 tmdb_api_key = st.secrets["tmdb_key"]
@@ -28,26 +29,42 @@ def get_redirected_url(movie_id):
 
 # Function to display the film details as a card
 def display_movie_details(movie):
-  c = st.container(border=True)
-  c1, c2 = c.columns(2)
-  c1.image(movie['poster_paths'][0], use_column_width=True)
-  c2.subheader(movie['title'])
-  c2.write(movie['year_of_release'])
-  c2.write(movie['director'])
-  c2.write(movie['countries'])
-  c2.write(movie['language'])
-  c2.write(movie['runtime'])
-  c2.write(movie['genres'])
-  c2.write(movie['overview'])
-  
-  # Display trailer if available
-  if movie['trailer_key']:
-      c.subheader("Trailer")
-      c.video(f"https://youtu.be/{movie['trailer_key']}")
 
-  # Display additional links
-  c.subheader("Additional Links")
-  c.write(f"[TMDB]({movie['tmdb_url']}) | [Letterboxd]({movie['lb_url']}) | [IMDb]({movie['imdb_url']})")
+  poster_items = [
+    {
+      'title': f"{movie['title']} {index + 1}",
+      'text': movie['title'],
+      'img': poster_path,
+    }
+    for index, poster_path in enumerate(movie['poster_paths'])
+  ]
+  
+  with st.container(border=True):
+    # Create a column within the container
+    col1, col2  = st.columns(2)
+    
+    with col1:
+      carousel(items=poster_items, width=1)
+    
+    with col2:
+      col2.subheader(movie['title'])
+      col2.write(movie['year_of_release'])
+      col2.write(movie['director'])
+      col2.write(movie['countries'])
+      col2.write(movie['language'])
+      col2.write(movie['runtime'])
+      col2.write(movie['genres'])
+      col2.write(movie['overview'])
+    
+  
+    # Display trailer if available
+    if movie['trailer_key']:
+      st.subheader("Trailer")
+      st.video(f"https://youtu.be/{movie['trailer_key']}")
+
+    # Display additional links
+    st.subheader("Additional Links")
+    st.write(f"[TMDB]({movie['tmdb_url']}) | [Letterboxd]({movie['lb_url']}) | [IMDb]({movie['imdb_url']})")
 
 
 # Function to fetch the movie details
