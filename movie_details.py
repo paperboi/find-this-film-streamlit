@@ -55,22 +55,21 @@ def display_movie_details(movie):
       col2.write(movie['runtime'])
       col2.write(movie['genres'])
       col2.write(movie['overview'])
-    
-  
-    # Display trailer if available
-    if movie['trailer_key']:
-      st.subheader("Trailer")
-      st.video(f"https://youtu.be/{movie['trailer_key']}")
-
-    # Display additional links
-    st.subheader("Additional Links")
-    st.write(f"[TMDB]({movie['tmdb_url']}) | [Letterboxd]({movie['lb_url']}) | [IMDb]({movie['imdb_url']})")
+      col2.markdown(f"[TMDB]({movie['tmdb_url']})\t[Letterboxd]({movie['lb_url']})\t[IMDb]({movie['imdb_url']})")
+      # Display trailer if available
+      if movie['trailer_key']:
+        st.subheader("Trailer")
+        st.video(f"https://youtu.be/{movie['trailer_key']}")
 
 
 # Function to fetch the movie details
-def fetch_movie_details(film_name, year_of_release):
+def fetch_movie_details(film_name, year_of_release=None):
   # Search for the movie on TMDB using film name and year of release
-  search_endpoint = f"https://api.themoviedb.org/3/search/movie?api_key={tmdb_api_key}&language=en-US&query={film_name}&year={year_of_release}"
+  search_endpoint = f"https://api.themoviedb.org/3/search/movie?api_key={tmdb_api_key}&language=en-US&query={film_name}"
+  
+  if year_of_release:
+    search_endpoint += f"&year={year_of_release}"
+  
   search_response = requests.get(search_endpoint)
 
   if search_response.status_code == 200:
@@ -92,7 +91,7 @@ def fetch_movie_details(film_name, year_of_release):
       
       # Extract relevant details
       title = movie_data['title']
-      release_year = movie_data['release_date'][:4]
+      year_of_release = movie_data['release_date'][:4]
       tmdb_url = f"https://www.themoviedb.org/movie/{movie_id}"
       lb_url = get_redirected_url(movie_id)
       imdb_url = f"https://www.imdb.com/title/{movie_data['imdb_id']}/"
@@ -162,7 +161,7 @@ def fetch_movie_details(film_name, year_of_release):
       # Prepare the result dictionary
       result = {
         'title': title,
-        'year_of_release': release_year,
+        'year_of_release': year_of_release,
         'director': director,
         'countries': countries_list,
         'language': language,

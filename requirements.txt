@@ -1,3 +1,4 @@
 streamlit
 streamlit_carousel
 requests
+pandas
